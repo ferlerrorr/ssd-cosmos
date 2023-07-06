@@ -1,0 +1,59 @@
+version: "3.8"
+services:
+    # PHP Service
+    php:
+        container_name: cosmos-soa
+        build:
+            context: .
+            target: php
+            args:
+                - APP_ENV=${APP_ENV}
+        environment:
+            - APP_ENV=${APP_ENV}
+            - CONTAINER_ROLE=app
+        working_dir: /var/www
+        volumes:
+            - ./:/var/www
+        ports:
+            - 120:85
+        depends_on:
+            - soa-db
+        networks:
+            - cosmos-app
+
+    # Database Server
+    soa-db:
+        container_name: soa-db
+        image: mysql:8.0
+        ports:
+            - 3333:3333
+        environment:
+            - MYSQL_DATABASE=${DB_DATABASE}
+            - MYSQL_USER=${DB_USERNAME}
+            - MYSQL_PASSWORD=${DB_PASSWORD}
+            - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+        volumes:
+            - db-data:/var/lib/mysql
+        networks:
+            - cosmos-app
+
+    # PHPmyAdmin
+    phpmyadmin:
+        image: phpmyadmin:5.2.0-apache
+        container_name: soa-phpmyadmin
+        restart: unless-stopped
+        tty: true
+        ports:
+            - 8100:80
+        networks:
+            - cosmos-app
+        environment:
+            - PMA_ARBITRARY=1
+            - UPLOAD_LIMIT=10000M
+
+networks:
+    cosmos-app:
+        driver: bridge
+
+volumes:
+    db-data: ~
