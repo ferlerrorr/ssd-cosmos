@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
 use Illuminate\Support\Facades\DB;
 
 error_reporting(E_ERROR | E_PARSE);
@@ -12,12 +11,30 @@ class ESoaBdoController extends Controller
     public function store()
     {
 
+
+        $data = null;
+
         //! This Block of Handles Data Stream Import to array
 
         if ($_FILES["import_excel"]["name"] != '') {
             $allowed_extension = array('xls', 'csv', 'xlsx');
             $file_array = explode(".", $_FILES["import_excel"]["name"]);
             $file_extension = end($file_array);
+
+
+
+            //! This Block of Handles Data Stream Validtation  
+            if (!in_array($file_extension, $allowed_extension)) {
+                $data = [["Invalid file: Must be a BDO-SSDI SOA File."]];
+                return response()->json(
+                    $data,
+                    403
+                );
+            }
+            //! This Block of Handles Data Stream Validtation 
+
+
+
 
             if (in_array($file_extension, $allowed_extension)) {
                 $file_name = time() . '.' . $file_extension;
