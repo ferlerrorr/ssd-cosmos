@@ -46,7 +46,11 @@ class ManualSoaController extends Controller
 
                 if (($excel_header_value[0]) != "Date" && ($excel_header_value[1]) != "Debit" && ($excel_header_value[2]) != "Credit" && ($excel_header_value[3]) != "Status") {
                     $data = null;
-
+                    $data = [["Invalid file: Must be a Manual SOA File."]];
+                    return response()->json(
+                        $data,
+                        403
+                    );
                     //! Validation
                 } else {
 
