@@ -11,9 +11,9 @@ class ManualSoaController extends Controller
     public function store()
     {
         $data = null;
-        if ($_FILES["import_excel"]["name"] != '') {
+        if ($_FILES["import_excel_ms"]["name"] != '') {
             $allowed_extension = array('xls', 'csv', 'xlsx');
-            $file_array = explode(".", $_FILES["import_excel"]["name"]);
+            $file_array = explode(".", $_FILES["import_excel_ms"]["name"]);
             $file_extension = end($file_array);
 
             //! This Block of Handles Data Stream Validtation  
@@ -28,7 +28,7 @@ class ManualSoaController extends Controller
 
             if (in_array($file_extension, $allowed_extension)) {
                 $file_name = time() . '.' . $file_extension;
-                move_uploaded_file($_FILES['import_excel']['tmp_name'], $file_name);
+                move_uploaded_file($_FILES['import_excel_ms']['tmp_name'], $file_name);
                 $file_type = \PhpOffice\PhpSpreadsheet\IOFactory::identify($file_name);
                 $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($file_type);
 
